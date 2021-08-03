@@ -1,6 +1,7 @@
 package com.example.pomodoro;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -8,10 +9,12 @@ import androidx.core.app.NotificationManagerCompat;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +30,8 @@ import java.util.TimerTask;
 
 import static android.content.ContentValues.TAG;
 import static com.example.pomodoro.NotifApp.CHANNEL_1_ID;
-
+//https://postimg.cc/YhK6gKx5
+//https://postimg.cc/McvMNdD0
 class SavedState{
     boolean exists;
     long startTime;
@@ -223,7 +227,21 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("State","FINISHED COUNTING EVERYTHING---------------------");
                                 if(curr_state==((rounds*2)-1)){
                                     curr_state = 0;
-                                    Toast.makeText(MainActivity.this,"Congratulations! You have completed a whole cycle!",Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(MainActivity.this,"Congratulations! You have completed a whole cycle!",Toast.LENGTH_LONG).show();
+                                    ///upon completing a whole cycle
+                                    new AlertDialog.Builder(MainActivity.this)
+                                            .setTitle("Congratulations!")
+                                            .setMessage("You have completed a whole pomodoro cycle! Press OK to continue.")
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.cancel();
+                                                }
+                                            })
+                                            .setIcon(R.drawable.blue_tick)
+                                            .show();
                                 }
                                 else{
                                     curr_state++;
@@ -244,6 +262,10 @@ public class MainActivity extends AppCompatActivity {
                                     Log.i("HALLELUIYA", "run: ----+++++++++++++++++++++++++++++++++----> is enabled");
                                     sendNotification();
                                 }
+                                //vibrations
+                                Vibrator vibrator;
+                                vibrator = (Vibrator) getSystemService(MainActivity.this.VIBRATOR_SERVICE);
+                                vibrator.vibrate(1500);
 
                                 timerThread.cancel();
                             }
@@ -312,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
     private void sendNotification() {
 
         Intent activityIntent = new Intent(this,MainActivity.class);
+        activityIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         PendingIntent contentIntent = PendingIntent.getActivity(this,0,activityIntent,0);
 
         notificationManager.cancel(1);
@@ -330,9 +353,11 @@ public class MainActivity extends AppCompatActivity {
         Notification notification = new NotificationCompat.Builder(this,CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_pompom)
                 .setContentTitle(message)
+                .setContentText("Click to view.")
                 .setColor(color)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setContentIntent(contentIntent)
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(true)
                 .build();
