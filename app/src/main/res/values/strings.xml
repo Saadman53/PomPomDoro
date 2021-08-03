@@ -2,7 +2,7 @@
     <string name="app_name">PomPom Doro</string>
 
     <string-array name="work_array">
-        <item>25</item>
+
         <item>30</item>
         <item>35</item>
         <item>40</item>
@@ -13,12 +13,14 @@
     </string-array>
 
     <string-array name="short_break_array">
+
         <item>5</item>
         <item>10</item>
         <item>15</item>
     </string-array>
 
     <string-array name="long_break_array">
+
         <item>20</item>
         <item>25</item>
         <item>30</item>
@@ -27,6 +29,7 @@
     </string-array>
 
     <string-array name="rounds_array">
+
         <item>2</item>
         <item>3</item>
         <item>4</item>

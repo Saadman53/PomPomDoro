@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                                                     dialog.cancel();
                                                 }
                                             })
-                                            .setIcon(R.drawable.blue_tick)
+                                            .setIcon(R.drawable.star_icon)
                                             .show();
                                 }
                                 else{
